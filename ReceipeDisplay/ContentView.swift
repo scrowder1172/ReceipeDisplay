@@ -14,75 +14,90 @@ import UIKit
 struct ContentView: View {
     
     @State private var recipes: [Recipe] = []
+    @State private var searchText: String = ""
+    
+    var searchResults: [Recipe] {
+        if searchText.isEmpty {
+            recipes
+        } else {
+            recipes.filter { $0.title.localizedStandardContains(searchText) || $0.ingredients.localizedStandardContains(searchText) }
+        }
+    }
     
     var body: some View {
         NavigationStack {
-            List {
-                Section("Breakfast") {
-                    ForEach(recipes) { recipe in
-                        if recipe.course == "Breakfast" {
-                            NavigationLink(value: recipe) {
-                                RecipeSummaryView(recipe: recipe)
+            Group{
+                if recipes.isEmpty {
+                    EmptyView()
+                } else {
+                    List {
+                        Section("Breakfast") {
+                            ForEach(searchResults) { recipe in
+                                if recipe.course == "Breakfast" {
+                                    NavigationLink(value: recipe) {
+                                        RecipeSummaryView(recipe: recipe)
+                                    }
+                                }
                             }
                         }
-                    }
-                }
-                
-                Section("Lunch") {
-                    ForEach(recipes) { recipe in
-                        if recipe.course == "Lunch" {
-                            NavigationLink(value: recipe) {
-                                RecipeSummaryView(recipe: recipe)
+                        
+                        Section("Lunch") {
+                            ForEach(searchResults) { recipe in
+                                if recipe.course == "Lunch" {
+                                    NavigationLink(value: recipe) {
+                                        RecipeSummaryView(recipe: recipe)
+                                    }
+                                }
                             }
                         }
-                    }
-                }
-                
-                Section("Main Course") {
-                    ForEach(recipes) { recipe in
-                        if recipe.course == "Main Course" {
-                            NavigationLink(value: recipe) {
-                                RecipeSummaryView(recipe: recipe)
+                        
+                        Section("Main Course") {
+                            ForEach(searchResults) { recipe in
+                                if recipe.course == "Main Course" {
+                                    NavigationLink(value: recipe) {
+                                        RecipeSummaryView(recipe: recipe)
+                                    }
+                                }
                             }
                         }
-                    }
-                }
-                
-                Section("Snacks and Sandwiches") {
-                    ForEach(recipes) { recipe in
-                        if recipe.course == "Snacks and Sandwiches" {
-                            NavigationLink(value: recipe) {
-                                RecipeSummaryView(recipe: recipe)
+                        
+                        Section("Snacks and Sandwiches") {
+                            ForEach(searchResults) { recipe in
+                                if recipe.course == "Snacks and Sandwiches" {
+                                    NavigationLink(value: recipe) {
+                                        RecipeSummaryView(recipe: recipe)
+                                    }
+                                }
                             }
                         }
-                    }
-                }
-                
-                Section("Side Dishes") {
-                    ForEach(recipes) { recipe in
-                        if recipe.course == "Side Dishes" {
-                            NavigationLink(value: recipe) {
-                                RecipeSummaryView(recipe: recipe)
+                        
+                        Section("Side Dishes") {
+                            ForEach(searchResults) { recipe in
+                                if recipe.course == "Side Dishes" {
+                                    NavigationLink(value: recipe) {
+                                        RecipeSummaryView(recipe: recipe)
+                                    }
+                                }
                             }
                         }
-                    }
-                }
-                
-                Section("Soup") {
-                    ForEach(recipes) { recipe in
-                        if recipe.course == "Soup" {
-                            NavigationLink(value: recipe) {
-                                RecipeSummaryView(recipe: recipe)
+                        
+                        Section("Soup") {
+                            ForEach(searchResults) { recipe in
+                                if recipe.course == "Soup" {
+                                    NavigationLink(value: recipe) {
+                                        RecipeSummaryView(recipe: recipe)
+                                    }
+                                }
                             }
                         }
-                    }
-                }
-                
-                Section("Desserts") {
-                    ForEach(recipes) { recipe in
-                        if recipe.course == "Desserts" {
-                            NavigationLink(value: recipe) {
-                                RecipeSummaryView(recipe: recipe)
+                        
+                        Section("Desserts") {
+                            ForEach(searchResults) { recipe in
+                                if recipe.course == "Desserts" {
+                                    NavigationLink(value: recipe) {
+                                        RecipeSummaryView(recipe: recipe)
+                                    }
+                                }
                             }
                         }
                     }
@@ -92,6 +107,7 @@ struct ContentView: View {
             .navigationDestination(for: Recipe.self) { recipe in
                 RecipeDetailView(recipe: recipe)
             }
+            .searchable(text: $searchText, prompt: "Search Recipe Titles and Ingredients")
         }
         .onAppear() {
             getReceipes()
